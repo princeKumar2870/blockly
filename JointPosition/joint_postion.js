@@ -14,12 +14,110 @@ Blockly.Blocks['math_add'] = {
         this.setHelpUrl("");
     }
 };
+class CustomFieldNumber extends Blockly.FieldNumber {
+    showEditor_ = (() => {
+
+        let event = new CustomEvent("linkKeyPad", {
+            detail: {
+                "type": "numpad",
+                "numpad_top": 250,
+                "numpad_right": 700,
+                "ref": this
+            },
+            bubbles: true,
+            cancelable: true
+        })
+        document.dispatchEvent(event);
+    });
+}
 Blockly.Blocks["Joint_position"] = {
     validate: function (newValue) {
         console.log("Validate is called");
 
-        // const block = this;
-        // block.updateShape_(newValue);
+        const block = this;
+        block.updateShape_(newValue);
+    },
+    updateShape_: function (newValue) {
+
+        if (newValue === "traj_param_joint_time") {
+
+            if (this.getField("vel_param_joint_input")) {
+                this.getInput("joint_motion_params").removeField("vel_param_joint_input")
+                this.getInput("joint_motion_params").removeField("°/sec")
+                this.getInput("joint_motion_params").removeField("Velocity:")
+            }
+
+            if (this.getField("acc_param_joint_input")) {
+                this.getInput("joint_motion_params").removeField("acc_param_joint_input")
+                this.getInput("joint_motion_params").removeField("°/sec²")
+                this.getInput("joint_motion_params").removeField("Acceleration:")
+            }
+
+            if (this.getField("time_num")) {
+                this.getInput("joint_motion_params").removeField("time_num")
+                this.getInput("joint_motion_params").removeField("Time")
+                this.getInput("joint_motion_params").removeField("sec")
+            }
+
+
+            this.getInput("joint_motion_params")
+                .appendField("Time", "Time")
+                .appendField(
+                    new CustomFieldNumber("0", null),
+                    "time_num"
+                )
+                .appendField("sec", "sec")
+        } else if (newValue === "traj_param_joint_speed") {
+
+            if (this.getField("vel_param_joint_input")) {
+                this.getInput("joint_motion_params").removeField("vel_param_joint_input")
+                this.getInput("joint_motion_params").removeField("°/sec")
+                this.getInput("joint_motion_params").removeField("Velocity:")
+            }
+
+            if (this.getField("acc_param_joint_input")) {
+                this.getInput("joint_motion_params").removeField("acc_param_joint_input")
+                this.getInput("joint_motion_params").removeField("°/sec²")
+                this.getInput("joint_motion_params").removeField("Acceleration:")
+            }
+
+
+            if (this.getField("time_num")) {
+                this.getInput("joint_motion_params").removeField("time_num")
+                this.getInput("joint_motion_params").removeField("Time")
+                this.getInput("joint_motion_params").removeField("sec")
+            }
+
+            this.getInput("joint_motion_params")
+                .appendField("Velocity:", "Velocity:")
+                .appendField(new CustomFieldNumber("60", this.validateNumberInput), "vel_param_joint_input")
+                .appendField("°/sec", "°/sec");
+
+            this.getInput("joint_motion_params")
+                .appendField("Acceleration:", "Acceleration:")
+                .appendField(new CustomFieldNumber("60", this.validateNumberInput), "acc_param_joint_input")
+                .appendField("°/sec²", "°/sec²");
+        } else if (newValue === "default_param") {
+
+            if (this.getField("vel_param_joint_input")) {
+                this.getInput("joint_motion_params").removeField("vel_param_joint_input")
+                this.getInput("joint_motion_params").removeField("°/sec")
+                this.getInput("joint_motion_params").removeField("Velocity:")
+            }
+
+            if (this.getField("acc_param_joint_input")) {
+                this.getInput("joint_motion_params").removeField("acc_param_joint_input")
+                this.getInput("joint_motion_params").removeField("°/sec²")
+                this.getInput("joint_motion_params").removeField("Acceleration:")
+            }
+
+
+            if (this.getField("time_num")) {
+                this.getInput("joint_motion_params").removeField("time_num")
+                this.getInput("joint_motion_params").removeField("Time")
+                this.getInput("joint_motion_params").removeField("sec")
+            }
+        }
     },
     init: function () {
         this.appendDummyInput("name_input")
@@ -35,19 +133,15 @@ Blockly.Blocks["Joint_position"] = {
             .appendField(
                 new Blockly.FieldDropdown(
                     [
-                        ["Speed", "backend_param_for_speed"],
-                        ["Time", "backend_param_for_time"],
+                        ["Speed", "traj_param_joint_speed"],
+                        ["Time", "traj_param_joint_time"],
                     ],
                     (newValue) => this.validate(newValue)
                 ),
-                "backend_parameter_for_joint"
+                "traj_param_joint"
             )
         this.appendEndRowInput()
         this.appendDummyInput("joint_motion_params")
-        this.appendValueInput("Velocity")
-            .appendField("velocity")
-        this.appendValueInput("Acceleration")
-            .appendField("Acceleration")
         this.appendEndRowInput("new_line1")
         this.appendValueInput("J1_INPUT")
             .appendField("J1")
