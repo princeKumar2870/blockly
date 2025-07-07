@@ -1,7 +1,5 @@
 import { defineCustomBlocks } from './custom.js';
 
-
-window.addEventListener('DOMContentLoaded', () => {
   const Blockly = window.Blockly;
 
   defineCustomBlocks();
@@ -37,24 +35,3 @@ window.addEventListener('DOMContentLoaded', () => {
     toolbox: toolbox,
     trashcan: true
   });
-
-  Blockly.JavaScript['my_custom_block'] = function (block) {
-    const steps = block.getFieldValue('FIELD_NAME');
-    return `moveForward(${steps});\n`;
-  };
-
-  // Define a dummy function so eval works
-  function moveForward(steps) {
-    console.log(`Moving forward ${steps} steps`);
-  }
-
-  document.getElementById('runButton').addEventListener('click', () => {
-    const code = Blockly.JavaScript.workspaceToCode(myWorkspace);
-    document.getElementById('output').textContent = code;
-    try {
-      eval(code); // For demo purposes only
-    } catch (e) {
-      console.error(e);
-    }
-  });
-});
