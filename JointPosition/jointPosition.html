@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Blockly with Custom Category and Trashcan</title>
+  <script src="https://unpkg.com/blockly/blockly.min.js"></script>
+  <style>
+    #blocklyDiv {
+      height: 480px;
+      width: 600px;
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+  <h3>Blockly with Custom Category and Trashcan</h3>
+  <div id="blocklyDiv"></div>
+
+  <script>
+    // 1. Define the 'math_add' block
+    Blockly.Blocks['math_add'] = {
+      init: function() {
+        this.appendValueInput("A")
+          .setCheck("Number")
+          .appendField("add");
+        this.appendValueInput("B")
+          .setCheck("Number")
+          .appendField("and");
+        this.setInputsInline(true);
+        this.setOutput(true, "Number");
+        this.setColour(230);
+        this.setTooltip("Adds two numbers.");
+        this.setHelpUrl("");
+      }
+    };
+
+    // 2. JS code generator for 'math_add'
+    Blockly.JavaScript['math_add'] = function(block) {
+      var value_a = Blockly.JavaScript.valueToCode(block, 'A', Blockly.JavaScript.ORDER_ADDITION) || '0';
+      var value_b = Blockly.JavaScript.valueToCode(block, 'B', Blockly.JavaScript.ORDER_ADDITION) || '0';
+      var code = value_a + ' + ' + value_b;
+      return [code, Blockly.JavaScript.ORDER_ADDITION];
+    };
+
+    // 3. Define toolbox with category "Custom"
+    const toolbox = {
+      kind: 'categoryToolbox',
+      contents: [
+        {
+          kind: 'category',
+          name: 'Custom',
+          colour: '#5C81A6',
+          contents: [
+            {
+              kind: 'block',
+              type: 'math_add'
+            }
+          ]
+        }
+      ]
+    };
+
+    // 4. Inject Blockly with toolbox and trashcan enabled
+    const workspace = Blockly.inject('blocklyDiv', {
+      toolbox: toolbox,
+      trashcan: true,
+      scrollbars: true
+    });
+
+    // (Optional) Add a block programmatically
+    // const block = workspace.newBlock('math_add');
+    // block.initSvg();
+    // block.render();
+    // block.moveBy(50, 50);
+
+  </script>
+</body>
+</html>
