@@ -1,0 +1,272 @@
+// Blockly.Blocks["Joint_position"] = {
+//     createBlocks: function (dataString) {
+//         let topBlock;
+//         topBlock = this.workspace.newBlock("math_num");
+//         if (topBlock.render) {
+//             topBlock.initSvg();
+//             topBlock.render();
+//         }
+//         topBlock.setShadow(true);
+//         topBlock.setFieldValue(this.getLowPrecisionValue(dataString), "NUM");
+//         topBlock.num_value = dataString
+//         return topBlock;
+//     },
+
+//     getLowPrecisionValue: function (value) {
+//         const number = parseFloat(value);
+//         return number.toFixed(4);
+//     },
+//     validate: function (newValue) {
+//         console.log("Validate is called");
+
+//         const block = this;
+//         block.updateShape_(newValue);
+//     },
+//     updateShape_: function (newValue) {
+
+//         if (newValue === "traj_param_joint_time") {
+
+//             if (this.getField("vel_param_joint_input")) {
+//                 this.getInput("joint_motion_params").removeField("vel_param_joint_input")
+//                 this.getInput("joint_motion_params").removeField("°/sec")
+//                 this.getInput("joint_motion_params").removeField("Velocity:")
+//             }
+
+//             if (this.getField("acc_param_joint_input")) {
+//                 this.getInput("joint_motion_params").removeField("acc_param_joint_input")
+//                 this.getInput("joint_motion_params").removeField("°/sec²")
+//                 this.getInput("joint_motion_params").removeField("Acceleration:")
+//             }
+
+//             if (this.getField("time_num")) {
+//                 this.getInput("joint_motion_params").removeField("time_num")
+//                 this.getInput("joint_motion_params").removeField("Time")
+//                 this.getInput("joint_motion_params").removeField("sec")
+//             }
+
+
+//             this.getInput("joint_motion_params")
+//                 .appendField("Time", "Time")
+//                 .appendField(
+//                     new CustomFieldNumber("0", null),
+//                     "time_num"
+//                 )
+//                 .appendField("sec", "sec")
+//         } else if (newValue === "traj_param_joint_speed") {
+
+//             if (this.getField("vel_param_joint_input")) {
+//                 this.getInput("joint_motion_params").removeField("vel_param_joint_input")
+//                 this.getInput("joint_motion_params").removeField("°/sec")
+//                 this.getInput("joint_motion_params").removeField("Velocity:")
+//             }
+
+//             if (this.getField("acc_param_joint_input")) {
+//                 this.getInput("joint_motion_params").removeField("acc_param_joint_input")
+//                 this.getInput("joint_motion_params").removeField("°/sec²")
+//                 this.getInput("joint_motion_params").removeField("Acceleration:")
+//             }
+
+
+//             if (this.getField("time_num")) {
+//                 this.getInput("joint_motion_params").removeField("time_num")
+//                 this.getInput("joint_motion_params").removeField("Time")
+//                 this.getInput("joint_motion_params").removeField("sec")
+//             }
+//             const velocityValue = this.vel || "60";
+//             const accelerationValue = this.acc || "60";
+
+//             this.getInput("joint_motion_params")
+//                 .appendField("Velocity:", "Velocity:")
+//                 .appendField(new CustomFieldNumber(velocityValue, this.validateNumberInput), "vel_param_joint_input")
+//                 .appendField("°/sec", "°/sec");
+
+//             this.getInput("joint_motion_params")
+//                 .appendField("Acceleration:", "Acceleration:")
+//                 .appendField(new CustomFieldNumber(accelerationValue, this.validateNumberInput), "acc_param_joint_input")
+//                 .appendField("°/sec²", "°/sec²");
+//         } else if (newValue === "default_param") {
+
+//             if (this.getField("vel_param_joint_input")) {
+//                 this.getInput("joint_motion_params").removeField("vel_param_joint_input")
+//                 this.getInput("joint_motion_params").removeField("°/sec")
+//                 this.getInput("joint_motion_params").removeField("Velocity:")
+//             }
+
+//             if (this.getField("acc_param_joint_input")) {
+//                 this.getInput("joint_motion_params").removeField("acc_param_joint_input")
+//                 this.getInput("joint_motion_params").removeField("°/sec²")
+//                 this.getInput("joint_motion_params").removeField("Acceleration:")
+//             }
+
+
+//             if (this.getField("time_num")) {
+//                 this.getInput("joint_motion_params").removeField("time_num")
+//                 this.getInput("joint_motion_params").removeField("Time")
+//                 this.getInput("joint_motion_params").removeField("sec")
+//             }
+//         }
+//     },
+//     clearInputs: function () {
+//         if (this.getInput("J1_INPUT"))
+//             this.removeInput("J1_INPUT", true)
+//         if (this.getInput("J2_INPUT"))
+//             this.removeInput("J2_INPUT", true)
+//         if (this.getInput("J3_INPUT"))
+//             this.removeInput("J3_INPUT", true)
+//         if (this.getInput("J4_INPUT"))
+//             this.removeInput("J4_INPUT", true)
+//         if (this.getInput("J5_INPUT"))
+//             this.removeInput("J5_INPUT", true)
+//         if (this.getInput("J6_INPUT"))
+//             this.removeInput("J6_INPUT", true)
+//         if (this.getInput("new_line2"))
+//             this.removeInput("new_line2", true)
+
+//     },
+//     validateNumberInput: function (value) {
+//         const number = parseFloat(value);
+
+//         if (!/^\d+(\.\d+)?$/.test(value) || number < -180 || number > 180) {
+//             return null;
+//         }
+//         return value;
+//     },
+//     setVal: function (position) {
+//         instance_jointjog = null;
+//         window.jointjog = false
+//     },
+//     setUpdateData: function () {
+//         if (typeof (this.data) === "string") {
+//             this.data = this.data.split(",")
+
+//             for (let i = 0; i < 6; i++) {
+//                 this.getInputTargetBlock(`J${i + 1}_INPUT`).num_value = this.data[i]
+//             }
+//         }
+//     },
+//     handleButton: function () {
+//         const joints = []
+//         console.log("handle Button called")
+//         for (let i = 0; i < 6; i++) {
+//             const connectedBlock = this.getInput(`J${i + 1}_INPUT`).connection.targetBlock();
+//             if (connectedBlock) {
+//                 const numStr = connectedBlock.getFieldValue('NUM');
+//                 const num = parseFloat(numStr);
+//                 console.log(`J${i + 1}_INPUT:`, num);
+//             } else {
+//                 console.log('No block connected');
+//             }
+//         }
+//     },
+//     imageOnClick: function () {
+//     },
+
+
+//     init: function () {
+//         const block = this
+//         this.appendDummyInput("name_input")
+//             .appendField("Joint Position:")
+//             .appendField(" ")
+//             .appendField(
+//                 new Blockly.FieldImage(
+//                     "./BlockIcon/play.png",
+//                     30,
+//                     30,
+//                     { alt: "Go To Pose", flipRtl: "FALSE" },
+//                     function () {
+//                         block.handleButton(); // call with correct context
+//                     }
+//                 )
+//             );
+
+//         this.appendDummyInput("title_input")
+//             .appendField("Joint Position")
+//             .appendField("");
+//         this.appendEndRowInput()
+//         this.appendDummyInput("name_text_input")
+//             .appendField("Name")
+//             .appendField(new Blockly.FieldTextInput("Joint_Pos_"), "NAME")
+//         this.appendEndRowInput()
+//         this.appendDummyInput("motion_profile_joint_pos")
+//             .appendField("Motion Profile:", "motion_profile_field")
+//             .appendField(
+//                 new Blockly.FieldDropdown(
+//                     [
+//                         ["Speed", "traj_param_joint_speed"],
+//                         ["Time", "traj_param_joint_time"],
+//                     ],
+//                     (newValue) => this.validate(newValue)
+//                 ),
+//                 "traj_param_joint"
+//             )
+//         this.appendEndRowInput()
+//         this.appendDummyInput("joint_motion_params")
+//         this.appendEndRowInput("new_line1")
+//         this.appendValueInput("J1_INPUT")
+//             .appendField("J1")
+//         this.appendValueInput("J2_INPUT")
+//             .appendField("J2")
+//         this.appendValueInput("J3_INPUT")
+//             .appendField("J3")
+//         this.appendEndRowInput("new_line2");
+//         this.appendValueInput("J4_INPUT")
+//             .appendField("J4")
+//         this.appendValueInput("J5_INPUT")
+//             .appendField("J5")
+//         this.appendValueInput("J6_INPUT")
+//             .appendField("J6")
+//         this.setPreviousStatement(true, null);
+//         this.setNextStatement(true, null);
+//         this.data = [0, 0, 0, 0, 0, 0]
+//     },
+//     onchange: function (changeEvent) {
+
+//         if (changeEvent.type == Blockly.Events.BLOCK_MOVE) {
+//             if (!this.isInFlyout) {
+//                 this.setCollapsed(false);
+//             }
+//         }
+
+
+//         if (changeEvent.type === Blockly.Events.CHANGE &&
+//             changeEvent.element === 'field' &&
+//             (changeEvent.name === 'traj_param_joint' || changeEvent.name === "time_num" || changeEvent.name === "vel_param_joint_input" || changeEvent.name === "acc_param_joint_input") &&
+//             changeEvent.blockId === this.id) {
+//             return;
+//         }
+
+//         if (changeEvent.blockId == this.id) {
+
+//             if (changeEvent.type == "click") {
+//                 instance_jointjog = this;
+//                 window.jointjog = true
+//                 joglink.clickType = "joint_blockly"
+//                 joglink.current.click();
+//             }
+
+//             if (changeEvent.type === "change") {
+//                 if (this.getField("NAME").value_ === "Joint_Pos_") {
+
+//                     let data = window.jog_joint
+//                     // let data = [0,0,0,0,0,0]
+//                     let arr = data.map(Number);
+//                     for (let i = 0; i < arr.length; i++) {
+//                         let valueBlock = this.createBlocks(arr[i]);
+//                         valueBlock.outputConnection.connect(
+//                             this.getInput(`J${i + 1}_INPUT`).connection
+//                         );
+//                         valueBlock.num_id = i
+//                         this.data[i] = valueBlock.num_value
+//                     }
+//                 }
+//             }
+//         }
+
+//         if (typeof (this.data) === "string") {
+//             this.data = this.data.split(",")
+//             for (let i = 0; i < 6; i++) {
+//                 this.getInputTargetBlock(`J${i + 1}_INPUT`).num_value = this.data[i]
+//             }
+//         }
+//     }
+// }

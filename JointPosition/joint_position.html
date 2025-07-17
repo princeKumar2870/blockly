@@ -6,6 +6,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <script src="https://unpkg.com/blockly/blockly.min.js"></script>
+
+  <script>
+      const originalGenUid = Blockly.utils.genUid;
+    Blockly.utils.genUid = function () {
+      const id = originalGenUid.call(this);
+      return id.replace(/\./g, 'prince');
+    };
+  </script>
   <style>
     #blocklyDiv {
       height: 480px;
@@ -17,6 +25,7 @@
 
 <body>
   <div id="blocklyDiv"></div>
+  <div id="blocklyDiv2"></div>
   <script src="joint_postion.js"></script>
 </body>
 
